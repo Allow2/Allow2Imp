@@ -38,26 +38,29 @@ class Allow2 {
     }
 
     function setChild(childId) {
-
+        // optional? or set current child and only overwrite if supplied?
     }
 
     // Checks Allow2 for usage permissions
     //
-    // @param {table} params                - table with parameters:
+    // @param {integer} childId             - eg: 10 - from list of parent account children
     // @param {array} activities            - eg: [1, 2, 3, 8] - see all "activities" at https://developer.allow2.com
     // @param {bool} log                    - should we log activity (true - default)? Or just check permissions (false)
     // @param {function} callback           - Callback function that takes two parameters (err, Allow2Result)
     //
-    function invoke(activities, log = true, callback = null) {
-        local contentType = "contentType" in params && params["contentType"]
-                            ? strip(params["contentType"].tolower())
-                            : AWS_LAMBDA_APPJSON_CONTENT_TYPE;
+    function check(childId, activities, log = true, callback = null) {
         local headers = {
-            "Content-Type": contentType
+            "Accept"        : "application/json"
         };
-        local body = contentType == AWS_LAMBDA_APPJSON_CONTENT_TYPE
-                     ? http.jsonencode(params.payload)
-                     : params.payload;
-        _awsRequest.post(AWS_LAMBDA_URL_PREFIX + params.functionName + "/invocations", headers, body, callback);
+        local body = http.jsonencode({
+            "userId"        : _userId,
+            "pairToken"     : _pairToken,
+            "deviceToken"   : _deviceToken,
+            tz              : _tz,
+            childId         : childId,
+            activities      : activities,
+            log             : log
+        });
+        request.post(ALLOW2_API + "/api/check", headers, body, callback);
     }
 }
