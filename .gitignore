@@ -39,3 +39,11 @@ luac.out
 *.x86_64
 *.hex
 
+.DS_Store
+*.wrench
+*.swp
+.imptest
+agent.out.nut
+device.out.nut
+utilities.nut
+
