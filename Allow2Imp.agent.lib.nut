@@ -29,7 +29,7 @@ class Allow2 {
     // Returns: Allow2 object created
     constructor(deviceToken) {
         _deviceToken = deviceToken;
-        _environment =
+        _environment = "production";
     }
 
     function pair() {
@@ -56,11 +56,17 @@ class Allow2 {
             "userId"        : _userId,
             "pairToken"     : _pairToken,
             "deviceToken"   : _deviceToken,
-            tz              : _tz,
-            childId         : childId,
-            activities      : activities,
-            log             : log
+            "tz"            : _tz,
+            "childId"       : childId,
+            "activities"    : activities,
+            "log"           : log
         });
         request.post(ALLOW2_API + "/api/check", headers, body, callback);
     }
 }
+
+allow2 = Allow2("test");
+allow2.pair();
+allow2.check(64, [1,2], true, function() {
+
+});
